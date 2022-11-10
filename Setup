@@ -1,0 +1,28 @@
+!gdown --id 1DgOZ56YruuUmHRD7hZNJNM39mlbRGApp # sample metadata
+!gdown --id 1Df7xqxCbENHB4oeovf2dYpx9_3dyYEYv # 16S_counts
+!gdown --id 15SQ9C5r_ExRGTiX3zehu959lKW_LrrBp # bacteria_counts
+!gdown --id 1yeBvAHeULU4Vk_TeAtWuF8kZRhyNCNa- # sequence_to_species_dict
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree import plot_tree
+
+metadata = pd.read_table('sample_metadata.tsv')
+metadata.index = ['farm_%i' %i for i in range(len(metadata))]
+
+sequences_counts = pd.read_table('16S_counts.tsv')
+sequences_counts.index = ['farm_%i' % i for i in range(len(sequences_counts))]
+
+bacteria_counts = pd.read_table('bacteria_counts.tsv')
+bacteria_counts.index = ['farm_%i' % i for i in range(len(bacteria_counts))]
+cols = list(bacteria_counts.columns)
+np.random.seed(42)
+np.random.shuffle(cols)
+bacteria_counts = bacteria_counts[cols]
+sequence_to_species_dict = np.load('sequence_to_species_dict.npy', allow_pickle=True).item()
+
+bacteria_counts = bacteria_counts.drop(['Unnamed: 0'], axis=1) 
