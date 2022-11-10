@@ -1,0 +1,16 @@
+#Remove Low Prevalence
+low_prev_bacteria = []
+bacteria = bacteria_counts.columns
+for b in bacteria:
+  if sum(bacteria_counts[b]>0)<10:  # If bacteria 'b' is a singleton,
+    low_prev_bacteria = low_prev_bacteria + [b] 
+
+n_low_prevalence = len(low_prev_bacteria) 
+print('%i bacteria are low prevalence.' % n_low_prevalence)
+
+bacteria_counts_no_low_prev = bacteria_counts.drop(low_prev_bacteria, axis=1)
+
+#Log-normalizing
+bacteria_counts_lognorm = np.log(bacteria_counts_no_low_prev+1)
+bacteria_counts_lognorm.to_csv('bacteria_counts_lognorm.csv')
+
